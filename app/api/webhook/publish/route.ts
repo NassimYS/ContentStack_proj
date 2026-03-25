@@ -1,13 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+const WEBHOOK_USERNAME = process.env.WEBHOOK_USERNAME;
+const WEBHOOK_PASSWORD = process.env.WEBHOOK_PASSWORD;
 const CONTENTSTACK_API_KEY = process.env.NEXT_PUBLIC_CONTENTSTACK_API_KEY;
 const CONTENTSTACK_MANAGEMENT_TOKEN = process.env.CONTENTSTACK_MANAGEMENT_TOKEN;
 
 export async function POST(req: NextRequest) {
-  // Vérifier le secret du webhook
-  const secret = req.headers.get("x-webhook-secret");
-  if (!WEBHOOK_SECRET || secret !== WEBHOOK_SECRET) {
+  // Vérifier l'authentification Basic Auth du webhook
+  const authHeader = req.headers.get("authorization");
+  if (!authHeader || !authHeader.startsWith("Basic ")) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const base64Credentials = authHeader.split(" ")[1];
+  const credentials = atob(base64Credentials);
+  const [username, password] = credentials.split(":");
+
+  if (username !== WEBHOOK_USERNAME || password !== WEBHOOK_PASSWORD) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
