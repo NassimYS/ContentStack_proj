@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Uppercase Field Modifier</title>
+  <script src="https://unpkg.com/@contentstack/app-sdk/dist/index.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+    }
+    input:focus {
+      border-color: #6c5ce7;
+    }
+  </style>
+</head>
+<body>
+  <input type="text" id="field-input" placeholder="Type here..." />
+
+  <script>
+    window.ContentstackAppSdk.init().then(function(sdk) {
+      const customField = sdk.location.CustomField;
+
+      // Récupérer la valeur existante
+      customField.field.getData().then(function(value) {
+        if (value) {
+          document.getElementById('field-input').value = value.toUpperCase();
+        }
+      });
+
+      // Convertir en majuscule à chaque frappe
+      document.getElementById('field-input').addEventListener('input', function(e) {
+        const upperValue = e.target.value.toUpperCase();
+        e.target.value = upperValue;
+        customField.field.setData(upperValue);
+      });
+
+      // Ajuster la hauteur de l'iframe
+      customField.frame.updateHeight(50);
+    });
+  </script>
+</body>
+</html>
