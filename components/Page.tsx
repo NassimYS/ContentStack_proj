@@ -43,7 +43,7 @@ export default function ContentDisplay({ page }: ContentDisplayProps) {
           src={page?.image.url}
           alt={page?.image.title}
           // Spread live preview attributes for the image field
-          {...(page?.image?.$ && page?.image?.$.url)}
+          {...((page?.image as any)?.$ && (page?.image as any)?.$.url)}
         />
       ) : null}
 
@@ -92,7 +92,7 @@ export default function ContentDisplay({ page }: ContentDisplayProps) {
                     width={200}
                     height={112}
                     className="w-full"
-                    {...(block?.$ && block?.$.image)} // Live preview attributes for image
+                    {...((block as any)?.$ && (block as any)?.$.image)} // Live preview attributes for image
                   />
                 ) : null}
               </div>
@@ -103,7 +103,7 @@ export default function ContentDisplay({ page }: ContentDisplayProps) {
                 {block.title ? (
                   <h2
                     className="text-2xl font-bold"
-                    {...(block?.$ && block?.$.title)} // Live preview attributes for title
+                    {...((block as any)?.$ && (block as any)?.$.title)} // Live preview attributes for title
                   >
                     {block.title}
                   </h2>
@@ -112,7 +112,7 @@ export default function ContentDisplay({ page }: ContentDisplayProps) {
                 {/* Block rich text content, sanitized for security */}
                 {block.copy ? (
                   <div
-                    {...(block?.$ && block?.$.copy)} // Live preview attributes for copy
+                    {...((block as any)?.$ && (block as any)?.$.copy)} // Live preview attributes for copy
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(block.copy), // Sanitize HTML content
                     }}
